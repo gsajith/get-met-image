@@ -1,9 +1,10 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { getRandomImage } from "../../helpers";
 
-export default (req, res) => {
+export default async (req, res) => {
   if (req.method === "POST") {
     res.status(401).json({ error: "POST not allowed" });
   } else {
-    res.status(200).json({ name: "Random!" });
+    const response = await getRandomImage();
+    res.status(200).json(response);
   }
 };
