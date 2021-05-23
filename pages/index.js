@@ -32,7 +32,7 @@ export const getServerSideProps = async ({ params, res }) => {
     }/api/getImage?id=${id}`
   );
   return {
-    props: result,
+    props: result.data,
   };
 };
 
