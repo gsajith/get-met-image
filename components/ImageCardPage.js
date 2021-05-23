@@ -1,18 +1,16 @@
+import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import Page from "../components/Page";
-import PageContainer from "../components/PageContainer";
+import ArtistName from "../components/ArtistName";
 import CardContainer from "../components/CardContainer";
 import CardContent from "../components/CardContent";
-import Image from "../components/Image";
-import axios from "axios";
-import ImageName from "../components/ImageName";
-import ArtistName from "../components/ArtistName";
-import ImageContainer from "../components/ImageContainer";
 import ColorSwatch from "../components/ColorSwatch";
-import Head from "next/head";
+import Image from "../components/Image";
+import ImageContainer from "../components/ImageContainer";
+import ImageName from "../components/ImageName";
+import Page from "../components/Page";
+import PageContainer from "../components/PageContainer";
 
 const ImageCardPage = ({ data, loading }) => {
-  const [result, setResult] = useState({});
   const [imageUrl, setImageUrl] = useState(null);
   const [imageTitle, setImageTitle] = useState(null);
   const [artist, setArtist] = useState(null);
