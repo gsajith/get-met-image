@@ -22,16 +22,22 @@ const HomePage = (props) => {
 export const getServerSideProps = async ({ params, res }) => {
   // const {id} = params;
   const id = 436535; // Default to Wheat Field with Cypresses, 1889, Vincent van Gogh
-  const result = await axios.get(
-    `${
-      process.env.NEXT_PUBLIC_API_URL
+  // const result = await axios.get(
+  //   `${
+  //     process.env.NEXT_PUBLIC_API_URL
+  //       ? process.env.NEXT_PUBLIC_API_URL
+  //       : process.env.VERCEL_URL
+  //       ? "https://" + process.env.VERCE_URL
+  //       : "http://localhost:3000"
+  //   }/api/getImage?id=${id}`
+  // );
+  return {
+    props: {
+      artistDisplayName: process.env.NEXT_PUBLIC_API_URL
         ? process.env.NEXT_PUBLIC_API_URL
-        : process.env.VERCEL_URL
-        ? process.env.VERCE_URL
-        : "http://localhost:3000"
-    }/api/getImage?id=${id}`
-  );
-  return { props: result.data };
+        : process.env.VERCEL_URL,
+    },
+  };
 };
 
 export default HomePage;
