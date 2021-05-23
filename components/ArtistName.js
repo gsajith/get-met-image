@@ -11,6 +11,7 @@ const ArtistName = styled.div`
   white-space: nowrap;
   margin-top: -1.5vw;
   margin-bottom: 1.5vw;
+  letter-spacing: -0.01vw;
   @media (min-width: 800px) {
     font-size: 32px;
     margin-top: -12px;

@@ -37,7 +37,8 @@ const getRandomImage = async (departments) => {
     typeof departments === "undefined" ||
     departments.length === 0
   ) {
-    departments = await fetchAllDepartments();
+    let departmentData = await fetchAllDepartments();
+    departments = departmentData.map((department) => department.departmentId);
   }
   let data = await fetchIdsByDepartment(departments);
   if (!data.objectIDs || data.objectIDs.length <= 0) {
@@ -47,7 +48,7 @@ const getRandomImage = async (departments) => {
     data.objectIDs[Math.floor(Math.random() * data.objectIDs.length)];
   let imageData = await getImageDataForId(randomId);
   while (!imageData.primaryImage || imageData.primaryImage === "") {
-    await sleep(2000);
+    await sleep(200);
     randomId =
       data.objectIDs[Math.floor(Math.random() * data.objectIDs.length)];
     imageData = await getImageDataForId(randomId);
@@ -91,10 +92,7 @@ const fetchAllDepartments = async () => {
   const allDepartments =
     await axios.get(`https://collectionapi.metmuseum.org/public/collection/v1/departments
 `);
-  let departmentIds = allDepartments.data.departments.map(
-    (department) => department.departmentId
-  );
-  return departmentIds;
+  return allDepartments.data.departments;
 };
 
-export { getImage, getRandomImage };
+export { getImage, getRandomImage, fetchAllDepartments };
