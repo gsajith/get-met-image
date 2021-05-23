@@ -33,9 +33,9 @@ export const getServerSideProps = async ({ params, res }) => {
   // );
   return {
     props: {
-      artistDisplayName: process.env.NEXT_PUBLIC_API_URL
-        ? process.env.NEXT_PUBLIC_API_URL
-        : process.env.VERCEL_URL,
+      artistDisplayName: process.env.VERCEL_URL
+        ? process.env.VERCEL_URL
+        : process.env.NEXT_PUBLIC_API_URL,
     },
   };
 };
