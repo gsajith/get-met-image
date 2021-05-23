@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import ImageCardPage from "../components/ImageCardPage";
 
 const HomePage = () => {
   const [data, setData] = useState(null);
