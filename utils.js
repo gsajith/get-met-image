@@ -1,4 +1,5 @@
 import * as htmlToImage from "html-to-image";
+import html2canvas from "html2canvas";
 
 function arrayCompare(_arr1, _arr2) {
   if (
@@ -27,29 +28,29 @@ function downloadImage(ref, title, artist) {
   const node = ref.cloneNode(true);
   canvas.innerHTML = "";
   canvas.appendChild(node);
-  htmlToImage.toPng(node).then(function (dataUrl) {
-    let link = document.createElement("a");
-    link.download =
-      title
-        .replace(/[^\w\s]/gi, "")
-        .split(/[^A-Za-z]/)
-        .join("-") +
-      "-" +
-      artist
-        .replace(/[^\w\s]/gi, "")
-        .split(/[^A-Za-z]/)
-        .join("-") +
-      ".png";
-    link.href = dataUrl;
-    link.click();
-  });
-  // html2canvas(canvas, {}).then((canvas) => {
-  //   let dataURL = canvas.toDataURL("image/png");
+  // htmlToImage.toPng(node).then(function (dataUrl) {
   //   let link = document.createElement("a");
-  //   link.download = "yodur-thorchad.png";
-  //   link.href = dataURL;
+  //   link.download =
+  //     title
+  //       .replace(/[^\w\s]/gi, "")
+  //       .split(/[^A-Za-z]/)
+  //       .join("-") +
+  //     "-" +
+  //     artist
+  //       .replace(/[^\w\s]/gi, "")
+  //       .split(/[^A-Za-z]/)
+  //       .join("-") +
+  //     ".png";
+  //   link.href = dataUrl;
   //   link.click();
   // });
+  html2canvas(canvas, {}).then((canvas) => {
+    let dataURL = canvas.toDataURL("image/png");
+    let link = document.createElement("a");
+    link.download = "yodur-thorchad.png";
+    link.href = dataURL;
+    link.click();
+  });
 }
 
 export { arrayCompare, downloadImage };
