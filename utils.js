@@ -47,7 +47,17 @@ function downloadImage(ref, title, artist) {
   html2canvas(canvas, {}).then((canvas) => {
     let dataURL = canvas.toDataURL("image/png");
     let link = document.createElement("a");
-    link.download = "yodur-thorchad.png";
+    link.download =
+      title
+        .replace(/[^\w\s]/gi, "")
+        .split(/[^A-Za-z]/)
+        .join("-") +
+      "-" +
+      artist
+        .replace(/[^\w\s]/gi, "")
+        .split(/[^A-Za-z]/)
+        .join("-") +
+      ".png";
     link.href = dataURL;
     link.click();
   });
