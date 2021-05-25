@@ -145,7 +145,7 @@ class LazyLoad extends React.Component {
         data-srcset={dataSrcSet}
         className={className}
         onLoad={async () => {
-          let result = await axios.get("/api/storeDataUrl?url=" + dataSrc);
+          let result = await axios.get("/api/storeDataUrl?url=" + src);
           setUrlDataResult(result.data);
         }}
       />
