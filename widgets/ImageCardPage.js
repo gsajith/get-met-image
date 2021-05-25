@@ -55,6 +55,10 @@ const ImageCardPage = ({ data, loading, setUrlDataResult }) => {
                   : "Get a random image from the Metropolitan Museum of Art"
               }
             />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
+            />
             <link rel="icon" href="/favicon.ico" />
           </Head>
 

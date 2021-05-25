@@ -1,14 +1,7 @@
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <div
-      style={{
-        overflow: "hidden",
-      }}>
-      <Component {...pageProps} />
-    </div>
-  );
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;
