@@ -14,7 +14,12 @@ import LazyImage, { Image } from "./LazyImage";
 import LoadingPage from "./LoadingPage";
 import PageWrapper from "../components/PageWrapper";
 
-const ImageCardPage = ({ data, loading, imageCardRef }) => {
+const ImageCardPageOffscreen = ({
+  data,
+  loading,
+  imageCardRef,
+  dataUrlResult,
+}) => {
   const [imageUrl, setImageUrl] = useState(data.primaryImage);
   const [smallImageUrl, setSmallImageUrl] = useState(data.primaryImageSmall);
   const [imageTitle, setImageTitle] = useState(data.title);
@@ -24,7 +29,6 @@ const ImageCardPage = ({ data, loading, imageCardRef }) => {
   const [objectID, setObjectID] = useState(data.objectID);
   const [hovering, setHovering] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [urlDataResult, setUrlDataResult] = useState(null);
 
   useEffect(() => {
     if (data && typeof data !== "undefined") {
@@ -35,8 +39,6 @@ const ImageCardPage = ({ data, loading, imageCardRef }) => {
       setDate(data.objectDate);
       setExtractedColor(data.extractedColors);
       setObjectID(data.objectID);
-
-      setUrlDataResult(null);
     }
   }, [data]);
 
@@ -79,11 +81,6 @@ const ImageCardPage = ({ data, loading, imageCardRef }) => {
                 <CopyButton objectID={objectID} setCopied={setCopied} />
               )}
               <ImageContainer>
-                <LazyImage
-                  src={smallImageUrl}
-                  dataSrc={imageUrl}
-                  setUrlDataResult={setUrlDataResult}
-                />
                 {urlDataResult && (
                   <Image
                     className="hidden-image"
@@ -121,4 +118,4 @@ const ImageCardPage = ({ data, loading, imageCardRef }) => {
   );
 };
 
-export default ImageCardPage;
+export default ImageCardPageOffscreen;

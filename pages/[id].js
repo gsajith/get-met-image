@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../components/Button";
 import ControlsContainer from "../components/ControlsContainer";
 import DepartmentsFilter from "../widgets/DepartmentsFilter";
@@ -37,6 +37,11 @@ const ImagePage = (props) => {
     });
   };
 
+  const onDownloadClick = useCallback(() => {
+    console.log("Downloading", data.title, data.artistDisplayName);
+    downloadImage(data.title, data.artistDisplayName);
+  }, [data]);
+
   useEffect(() => {
     if (
       (!props || !props.primaryImage) &&
@@ -72,7 +77,7 @@ const ImagePage = (props) => {
           }
         />
         <Button onClick={fetchRandomImage}>Random</Button>
-        <Button onClick={downloadImage} style={{ marginLeft: "auto" }}>
+        <Button onClick={onDownloadClick} style={{ marginLeft: "auto" }}>
           <img
             src="./Download.svg"
             style={{ width: 16, height: 16, marginRight: 6 }}

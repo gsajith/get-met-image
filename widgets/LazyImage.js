@@ -2,8 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import axios from "axios";
 
-const Image = styled.img`
+export const Image = styled.img`
   object-fit: contain;
   position: absolute;
   top: 0;
@@ -36,12 +37,14 @@ class LazyLoad extends React.Component {
     ]),
     className: PropTypes.string,
     iframe: PropTypes.bool,
+    setUrlDataResult: PropTypes.func,
   };
 
   static defaultProps = {
     src: "data:image/gif;base64,R0lGODdhEAAJAIAAAMLCwsLCwiwAAAAAEAAJAAACCoSPqcvtD6OclBUAOw==",
     dataSizes: "auto",
     iframe: false,
+    setUrlDataResult: () => {},
   };
 
   componentWillUpdate = (nextProps) => {
@@ -112,8 +115,16 @@ class LazyLoad extends React.Component {
   };
 
   render() {
-    let { src, dataSizes, dataSrc, dataSrcSet, className, iframe, ...other } =
-      this.props;
+    let {
+      src,
+      dataSizes,
+      dataSrc,
+      dataSrcSet,
+      className,
+      iframe,
+      setUrlDataResult,
+      ...other
+    } = this.props;
     dataSrcSet = this.handleSrcSet(dataSrcSet);
     className = className + " lazyload";
     if (iframe) {
@@ -133,6 +144,10 @@ class LazyLoad extends React.Component {
         data-sizes={dataSizes}
         data-srcset={dataSrcSet}
         className={className}
+        onLoad={async () => {
+          let result = await axios.get("/api/storeDataUrl?url=" + dataSrc);
+          setUrlDataResult(result.data);
+        }}
       />
     );
   }

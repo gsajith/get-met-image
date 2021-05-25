@@ -1,3 +1,5 @@
+import * as htmlToImage from "html-to-image";
+
 function arrayCompare(_arr1, _arr2) {
   if (
     !Array.isArray(_arr1) ||
@@ -20,8 +22,41 @@ function arrayCompare(_arr1, _arr2) {
   return true;
 }
 
-function downloadImage() {
-  console.log("ding");
+function downloadImage(ref, title, artist) {
+  const canvas = document.getElementById("canvas");
+  const node = ref.cloneNode(true);
+  const hiddenImages = node.getElementsByClassName("hidden-image");
+  if (hiddenImages && hiddenImages.length > 0) {
+    const hiddenImage = hiddenImages[hiddenImages.length - 1];
+    hiddenImage.style.display = "initial";
+  }
+  canvas.innerHTML = "";
+  canvas.appendChild(node);
+  htmlToImage
+    .toPng(document.getElementById("to-download"))
+    .then(function (dataUrl) {
+      let link = document.createElement("a");
+      link.download =
+        title
+          .replace(/[^\w\s]/gi, "")
+          .split(/[^A-Za-z]/)
+          .join("-") +
+        "-" +
+        artist
+          .replace(/[^\w\s]/gi, "")
+          .split(/[^A-Za-z]/)
+          .join("-") +
+        ".png";
+      link.href = dataUrl;
+      link.click();
+    });
+  // html2canvas(canvas, {}).then((canvas) => {
+  //   let dataURL = canvas.toDataURL("image/png");
+  //   let link = document.createElement("a");
+  //   link.download = "yodur-thorchad.png";
+  //   link.href = dataURL;
+  //   link.click();
+  // });
 }
 
 export { arrayCompare, downloadImage };

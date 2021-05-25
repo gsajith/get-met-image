@@ -92,7 +92,9 @@ const DepartmentPage = (props) => {
           }
         />
         <Button onClick={fetchRandomImage}>Random</Button>
-        <Button onClick={downloadImage} style={{ marginLeft: "auto" }}>
+        <Button
+          onClick={() => downloadImage(data.title, data.artistDisplayName)}
+          style={{ marginLeft: "auto" }}>
           <img
             src="./Download.svg"
             style={{ width: 16, height: 16, marginRight: 6 }}
