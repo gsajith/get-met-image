@@ -2,15 +2,15 @@ import styled from "styled-components";
 
 const ArtistName = styled.div`
   ${(props) => (props.color ? "color: " + props.color + ";" : "")}
-  font-size: 4vw;
+  font-size: ${(props) => (props.offscreen ? "32px" : "4vw")};
+  margin-top: ${(props) => (props.offscreen ? "-12px" : "-1.5vw")};
+  margin-bottom: ${(props) => (props.offscreen ? "12px" : "1.5vw")};
   line-height: 2;
   max-width: 700px;
-  width: 80vw;
+  width: 90%;
   overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-top: -1.5vw;
-  margin-bottom: 1.5vw;
   letter-spacing: -0.01vw;
   @media (min-width: 800px) {
     font-size: 32px;

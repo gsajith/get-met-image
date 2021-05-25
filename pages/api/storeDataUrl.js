@@ -20,12 +20,6 @@ export default async (req, res) => {
       "content-type"
     ].toLowerCase()};base64,${image}`;
 
-    // let dataUrl = await new Promise((resolve) => {
-    //   let reader = new window.FileReader();
-    //   reader.onload = () => resolve(reader.result);
-    //   reader.readAsDataURL(blob);
-    // });
-    // console.log("DONE", dataUrl);
     res.status(200).send(blob);
   }
 };

@@ -7,6 +7,7 @@ import DepartmentsFilter from "../widgets/DepartmentsFilter";
 import FilterDepartmentsButton from "../components/FilterDepartmentsButton";
 import ImageCardPage from "../widgets/ImageCardPage";
 import { downloadImage } from "../utils";
+import ImageCardPageOffscreen from "../widgets/ImageCardPageOffscreen";
 
 const HomePage = (props) => {
   const router = useRouter();
@@ -16,7 +17,8 @@ const HomePage = (props) => {
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [departmentPickerShown, setDepartmentPickerShown] = useState(false);
-  const imageCardRef = useRef(null);
+  const [urlDataResult, setUrlDataResult] = useState(null);
+  const downloadRef = useRef(null);
 
   const fetchRandomImage = () => {
     setLoading(true);
@@ -49,7 +51,7 @@ const HomePage = (props) => {
 
   const onDownloadClick = useCallback(() => {
     console.log("Downloading", data.title, data.artistDisplayName);
-    downloadImage(imageCardRef.current, data.title, data.artistDisplayName);
+    downloadImage(downloadRef.current, data.title, data.artistDisplayName);
   }, [data]);
 
   useEffect(() => {
@@ -64,7 +66,12 @@ const HomePage = (props) => {
       <ImageCardPage
         data={data}
         loading={loading}
-        imageCardRef={imageCardRef}
+        setUrlDataResult={setUrlDataResult}
+      />
+      <ImageCardPageOffscreen
+        data={data}
+        urlDataResult={urlDataResult}
+        downloadRef={downloadRef}
       />
       <ControlsContainer>
         {departmentPickerShown && (

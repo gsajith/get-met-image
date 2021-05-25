@@ -10,11 +10,11 @@ import Page from "../components/Page";
 import PageContainer from "../components/PageContainer";
 import CopiedNotification from "../components/CopiedNotification";
 import CopyButton from "../components/CopyButton";
-import LazyImage, { Image } from "./LazyImage";
+import LazyImage from "./LazyImage";
 import LoadingPage from "./LoadingPage";
 import PageWrapper from "../components/PageWrapper";
 
-const ImageCardPage = ({ data, loading, imageCardRef }) => {
+const ImageCardPage = ({ data, loading, setUrlDataResult }) => {
   const [imageUrl, setImageUrl] = useState(data.primaryImage);
   const [smallImageUrl, setSmallImageUrl] = useState(data.primaryImageSmall);
   const [imageTitle, setImageTitle] = useState(data.title);
@@ -24,7 +24,6 @@ const ImageCardPage = ({ data, loading, imageCardRef }) => {
   const [objectID, setObjectID] = useState(data.objectID);
   const [hovering, setHovering] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [urlDataResult, setUrlDataResult] = useState(null);
 
   useEffect(() => {
     if (data && typeof data !== "undefined") {
@@ -35,17 +34,12 @@ const ImageCardPage = ({ data, loading, imageCardRef }) => {
       setDate(data.objectDate);
       setExtractedColor(data.extractedColors);
       setObjectID(data.objectID);
-
-      setUrlDataResult(null);
     }
   }, [data]);
 
   return (
     <Page>
-      <PageWrapper
-        ref={imageCardRef}
-        id="to-download"
-        color={extractedColor?.lightMuted}>
+      <PageWrapper color={extractedColor?.lightMuted}>
         <PageContainer>
           <Head>
             <title>
@@ -84,13 +78,6 @@ const ImageCardPage = ({ data, loading, imageCardRef }) => {
                   dataSrc={imageUrl}
                   setUrlDataResult={setUrlDataResult}
                 />
-                {urlDataResult && (
-                  <Image
-                    className="hidden-image"
-                    style={{ display: "none" }}
-                    src={urlDataResult}
-                  />
-                )}
               </ImageContainer>
               <ImageName color={extractedColor?.muted}>
                 {imageTitle ? imageTitle : "Title unknown"}

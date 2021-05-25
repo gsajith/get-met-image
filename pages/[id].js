@@ -7,6 +7,7 @@ import DepartmentsFilter from "../widgets/DepartmentsFilter";
 import FilterDepartmentsButton from "../components/FilterDepartmentsButton";
 import ImageCardPage from "../widgets/ImageCardPage";
 import { downloadImage } from "../utils";
+import ImageCardPageOffscreen from "../widgets/ImageCardPageOffscreen";
 
 const ImagePage = (props) => {
   const router = useRouter();

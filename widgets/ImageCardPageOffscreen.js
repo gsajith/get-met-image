@@ -8,45 +8,37 @@ import ImageContainer from "../components/ImageContainer";
 import ImageName from "../components/ImageName";
 import Page from "../components/Page";
 import PageContainer from "../components/PageContainer";
-import CopiedNotification from "../components/CopiedNotification";
-import CopyButton from "../components/CopyButton";
-import LazyImage, { Image } from "./LazyImage";
-import LoadingPage from "./LoadingPage";
+import { Image } from "./LazyImage";
 import PageWrapper from "../components/PageWrapper";
 
-const ImageCardPageOffscreen = ({
-  data,
-  loading,
-  imageCardRef,
-  dataUrlResult,
-}) => {
-  const [imageUrl, setImageUrl] = useState(data.primaryImage);
-  const [smallImageUrl, setSmallImageUrl] = useState(data.primaryImageSmall);
+const ImageCardPageOffscreen = ({ data, urlDataResult, downloadRef }) => {
   const [imageTitle, setImageTitle] = useState(data.title);
   const [artist, setArtist] = useState(data.artistDisplayName);
   const [date, setDate] = useState(data.objectDate);
   const [extractedColor, setExtractedColor] = useState(data.extractedColors);
-  const [objectID, setObjectID] = useState(data.objectID);
-  const [hovering, setHovering] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (data && typeof data !== "undefined") {
-      setImageUrl(data.primaryImage);
-      setSmallImageUrl(data.primaryImageSmall);
       setImageTitle(data.title);
       setArtist(data.artistDisplayName);
       setDate(data.objectDate);
       setExtractedColor(data.extractedColors);
-      setObjectID(data.objectID);
     }
   }, [data]);
 
   return (
-    <Page>
+    <div
+      style={{
+        position: "absolute",
+        left: "120%",
+        width: 888,
+        height: 1921,
+        background: "red",
+        top: 0,
+      }}>
       <PageWrapper
-        ref={imageCardRef}
-        id="to-download"
+        style={{ background: extractedColor?.lightMuted }}
+        ref={downloadRef}
         color={extractedColor?.lightMuted}>
         <PageContainer>
           <Head>
@@ -66,34 +58,16 @@ const ImageCardPageOffscreen = ({
             <link rel="icon" href="/favicon.ico" />
           </Head>
 
-          <CardContainer
-            onMouseEnter={() => setHovering(!loading && true)}
-            onMouseLeave={() => setHovering(false)}>
+          <CardContainer>
             <CardContent>
-              <LoadingPage
-                color={extractedColor?.lightMuted}
-                opacity={loading ? 0.7 : 0}
-              />
-              <CopiedNotification opacity={copied ? 1 : 0}>
-                copied
-              </CopiedNotification>
-              {hovering && (
-                <CopyButton objectID={objectID} setCopied={setCopied} />
-              )}
               <ImageContainer>
-                {urlDataResult && (
-                  <Image
-                    className="hidden-image"
-                    style={{ display: "none" }}
-                    src={urlDataResult}
-                  />
-                )}
+                {urlDataResult && <Image src={urlDataResult} />}
               </ImageContainer>
-              <ImageName color={extractedColor?.muted}>
+              <ImageName offscreen={true} color={extractedColor?.muted}>
                 {imageTitle ? imageTitle : "Title unknown"}
                 {date ? <>, {date}</> : ", date unknown"}
               </ImageName>
-              <ArtistName color={extractedColor?.darkMuted}>
+              <ArtistName offscreen={true} color={extractedColor?.darkMuted}>
                 {artist ? artist : "Artist unknown"}
               </ArtistName>
               {extractedColor && (
@@ -106,7 +80,10 @@ const ImageCardPageOffscreen = ({
                     flexDirection: "row",
                   }}>
                   {Object.values(extractedColor).map((color) => (
-                    <ColorSwatch style={{ backgroundColor: color }} />
+                    <ColorSwatch
+                      offscreen={true}
+                      style={{ backgroundColor: color }}
+                    />
                   ))}
                 </div>
               )}
@@ -114,7 +91,7 @@ const ImageCardPageOffscreen = ({
           </CardContainer>
         </PageContainer>
       </PageWrapper>
-    </Page>
+    </div>
   );
 };
 
