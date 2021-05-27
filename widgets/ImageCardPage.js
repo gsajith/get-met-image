@@ -100,11 +100,15 @@ const ImageCardPage = ({
                   color={extractedColors?.lightVibrant}
                   opacity={loading ? 0.7 : 0}
                 />
-                <CopiedNotification opacity={copied ? 1 : 0}>
-                  copied
+                <CopiedNotification opacity={copied ? 0.8 : 0}>
+                  Copied link
                 </CopiedNotification>
-                {hovering && (
-                  <CopyButton objectID={objectID} setCopied={setCopied} />
+                {(hovering || isMobile) && (
+                  <CopyButton
+                    isMobile={isMobile}
+                    objectID={objectID}
+                    setCopied={setCopied}
+                  />
                 )}
                 <ImageContainer>
                   <LazyImage

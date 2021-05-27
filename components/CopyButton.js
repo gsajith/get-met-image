@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import React, { useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import styled from "styled-components";
 
 const CopyButtonContainer = styled.div`
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: ${(props) => (props.isMobile ? 0 : 16)}px;
+  right: ${(props) => (props.isMobile ? 0 : 16)}px;
   cursor: pointer;
   padding: 8px 10px 8px 12px;
   z-index: 2;
@@ -19,7 +19,7 @@ const CopyButtonContainer = styled.div`
   }
 `;
 
-const CopyButton = ({ objectID, setCopied }) => {
+const CopyButton = ({ objectID, setCopied, isMobile }) => {
   const copyText =
     (typeof window !== "undefined"
       ? window.location.origin + "/"
@@ -36,7 +36,7 @@ const CopyButton = ({ objectID, setCopied }) => {
           clearTimeout(copyTimeout.current);
           copyTimeout.current = setTimeout(() => setCopied(false), 2000);
         }}>
-        <CopyButtonContainer>
+        <CopyButtonContainer isMobile={isMobile}>
           <img src={"/Copy.svg"} />
         </CopyButtonContainer>
       </CopyToClipboard>
