@@ -77,11 +77,13 @@ const ImagePage = (props) => {
         loading={loading}
         setUrlDataResult={setUrlDataResult}
       />
-      <ImageCardPageOffscreen
-        data={data}
-        urlDataResult={urlDataResult}
-        downloadRef={downloadRef}
-      />
+      {!isMobile && (
+        <ImageCardPageOffscreen
+          data={data}
+          urlDataResult={urlDataResult}
+          downloadRef={downloadRef}
+        />
+      )}
       <ControlsContainer>
         {departmentPickerShown && (
           <DepartmentsFilter
