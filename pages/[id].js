@@ -8,6 +8,7 @@ import { downloadImage } from "../utils";
 import DepartmentsFilter from "../widgets/DepartmentsFilter";
 import ImageCardPage from "../widgets/ImageCardPage";
 import ImageCardPageOffscreen from "../widgets/ImageCardPageOffscreen";
+import { isMobile } from "react-device-detect";
 
 const ImagePage = (props) => {
   const router = useRouter();
@@ -20,9 +21,6 @@ const ImagePage = (props) => {
   const [departmentPickerShown, setDepartmentPickerShown] = useState(false);
   const [urlDataResult, setUrlDataResult] = useState(null);
   const downloadRef = useRef(null);
-  if (id.includes(".png")) {
-    return <img src="https://i.imgur.com/06rJufm.png" />;
-  }
 
   const fetchRandomImage = () => {
     setLoading(true);
@@ -44,15 +42,20 @@ const ImagePage = (props) => {
   };
 
   const onDownloadClick = useCallback(() => {
-    console.log("Downloading", data.title, data.artistDisplayName);
-    downloadImage(downloadRef.current, data.title, data.artistDisplayName);
+    if (isMobile) {
+      router.push("/duck.png");
+    } else {
+      console.log("Downloading", data.title, data.artistDisplayName);
+      downloadImage(downloadRef.current, data.title, data.artistDisplayName);
+    }
   }, [data]);
 
   useEffect(() => {
     if (
       (!props || !props.primaryImage) &&
       id !== null &&
-      typeof id !== "undefined"
+      typeof id !== "undefined" &&
+      !id.includes(".png")
     ) {
       setLoading(true);
       axios.get("/api/getImage?id=" + id).then(({ data }) => {
@@ -62,6 +65,10 @@ const ImagePage = (props) => {
     }
     fetchDepartments();
   }, [id]);
+
+  if (id.includes(".png")) {
+    return <img src="https://i.imgur.com/06rJufm.png" />;
+  }
 
   return (
     <>
