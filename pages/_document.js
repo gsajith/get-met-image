@@ -1,6 +1,5 @@
 import Document from "next/document";
 import { ServerStyleSheet } from "styled-components";
-import { isMobile } from "react-device-detect";
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -21,17 +20,6 @@ export default class MyDocument extends Document {
           <>
             {initialProps.styles}
             {sheet.getStyleElement()}
-            {!isMobile && (
-              <div
-                id="canvas"
-                style={{
-                  position: "absolute",
-                  left: "120%",
-                  width: 888,
-                  height: 1921,
-                  background: "red",
-                }}></div>
-            )}
           </>
         ),
       };

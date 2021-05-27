@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { isMobile } from "react-device-detect";
 import Button from "../../components/Button";
 import ControlsContainer from "../../components/ControlsContainer";
 import FilterDepartmentsButton from "../../components/FilterDepartmentsButton";
@@ -22,6 +23,7 @@ const DepartmentPage = (props) => {
   const [departmentPickerShown, setDepartmentPickerShown] = useState(false);
   const [urlDataResult, setUrlDataResult] = useState(null);
   const downloadRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const fetchRandomImage = () => {
     setLoading(true);
@@ -53,7 +55,12 @@ const DepartmentPage = (props) => {
 
   const onDownloadClick = useCallback(() => {
     console.log("Downloading", data.title, data.artistDisplayName);
-    downloadImage(downloadRef.current, data.title, data.artistDisplayName);
+    downloadImage(
+      downloadRef.current,
+      canvasRef.current,
+      data.title,
+      data.artistDisplayName
+    );
   }, [data]);
 
   useEffect(() => {
@@ -81,16 +88,12 @@ const DepartmentPage = (props) => {
   }, [props]);
 
   return (
-    <>
+    <div style={{ position: "relative" }}>
       <ImageCardPage
         data={data}
         loading={loading}
         setUrlDataResult={setUrlDataResult}
-      />
-      <ImageCardPageOffscreen
-        data={data}
-        urlDataResult={urlDataResult}
-        downloadRef={downloadRef}
+        canvasRef={canvasRef}
       />
       <ControlsContainer>
         {departmentPickerShown && (
@@ -132,7 +135,14 @@ const DepartmentPage = (props) => {
           Download
         </Button>
       </ControlsContainer>
-    </>
+      {!isMobile && (
+        <ImageCardPageOffscreen
+          data={data}
+          urlDataResult={urlDataResult}
+          downloadRef={downloadRef}
+        />
+      )}
+    </div>
   );
 };
 

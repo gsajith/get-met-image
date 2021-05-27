@@ -8,6 +8,7 @@ import { downloadImage } from "../utils";
 import DepartmentsFilter from "../widgets/DepartmentsFilter";
 import ImageCardPage from "../widgets/ImageCardPage";
 import ImageCardPageOffscreen from "../widgets/ImageCardPageOffscreen";
+import { isMobile } from "react-device-detect";
 
 const HomePage = (props) => {
   const router = useRouter();
@@ -19,6 +20,7 @@ const HomePage = (props) => {
   const [departmentPickerShown, setDepartmentPickerShown] = useState(false);
   const [urlDataResult, setUrlDataResult] = useState(null);
   const downloadRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const fetchRandomImage = () => {
     setLoading(true);
@@ -51,7 +53,12 @@ const HomePage = (props) => {
 
   const onDownloadClick = useCallback(() => {
     console.log("Downloading", data.title, data.artistDisplayName);
-    downloadImage(downloadRef.current, data.title, data.artistDisplayName);
+    downloadImage(
+      downloadRef.current,
+      canvasRef.current,
+      data.title,
+      data.artistDisplayName
+    );
   }, [data]);
 
   useEffect(() => {
@@ -62,16 +69,12 @@ const HomePage = (props) => {
   }, [props]);
 
   return (
-    <>
+    <div style={{ position: "relative" }}>
       <ImageCardPage
         data={data}
         loading={loading}
         setUrlDataResult={setUrlDataResult}
-      />
-      <ImageCardPageOffscreen
-        data={data}
-        urlDataResult={urlDataResult}
-        downloadRef={downloadRef}
+        canvasRef={canvasRef}
       />
       <ControlsContainer>
         {departmentPickerShown && (
@@ -110,10 +113,17 @@ const HomePage = (props) => {
             src="./Download.svg"
             style={{ width: 16, height: 16, marginRight: 6 }}
           />
-          Download
+          Downloads
         </Button>
       </ControlsContainer>
-    </>
+      {!isMobile && (
+        <ImageCardPageOffscreen
+          data={data}
+          urlDataResult={urlDataResult}
+          downloadRef={downloadRef}
+        />
+      )}
+    </div>
   );
 };
 

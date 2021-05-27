@@ -23,8 +23,8 @@ function arrayCompare(_arr1, _arr2) {
   return true;
 }
 
-function downloadImage(ref, title, artist) {
-  const canvas = document.getElementById("canvas");
+function downloadImage(ref, canvasRef, title, artist) {
+  const canvas = canvasRef;
   const node = ref.cloneNode(true);
   canvas.innerHTML = "";
   canvas.appendChild(node);

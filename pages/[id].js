@@ -21,6 +21,7 @@ const ImagePage = (props) => {
   const [departmentPickerShown, setDepartmentPickerShown] = useState(false);
   const [urlDataResult, setUrlDataResult] = useState(null);
   const downloadRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const fetchRandomImage = () => {
     setLoading(true);
@@ -46,7 +47,12 @@ const ImagePage = (props) => {
       router.push("/duck.png");
     } else {
       console.log("Downloading", data.title, data.artistDisplayName);
-      downloadImage(downloadRef.current, data.title, data.artistDisplayName);
+      downloadImage(
+        downloadRef.current,
+        canvasRef.current,
+        data.title,
+        data.artistDisplayName
+      );
     }
   }, [data]);
 
@@ -71,19 +77,13 @@ const ImagePage = (props) => {
   }
 
   return (
-    <>
+    <div style={{ position: "relative" }}>
       <ImageCardPage
         data={data}
         loading={loading}
         setUrlDataResult={setUrlDataResult}
+        canvasRef={canvasRef}
       />
-      {!isMobile && (
-        <ImageCardPageOffscreen
-          data={data}
-          urlDataResult={urlDataResult}
-          downloadRef={downloadRef}
-        />
-      )}
       <ControlsContainer>
         {departmentPickerShown && (
           <DepartmentsFilter
@@ -124,7 +124,14 @@ const ImagePage = (props) => {
           Download
         </Button>
       </ControlsContainer>
-    </>
+      {!isMobile && (
+        <ImageCardPageOffscreen
+          data={data}
+          urlDataResult={urlDataResult}
+          downloadRef={downloadRef}
+        />
+      )}
+    </div>
   );
 };
 
