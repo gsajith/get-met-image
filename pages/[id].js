@@ -15,6 +15,7 @@ const NoSSRControlsContainer = dynamic(
   { ssr: false }
 );
 
+// TODO: loading random image when extracted colors not loaded yet messes up loadingswatch animation
 const ImagePage = (props) => {
   const router = useRouter();
   const { id } = router.query;
@@ -28,6 +29,8 @@ const ImagePage = (props) => {
   const [urlDataResult, setUrlDataResult] = useState(null);
   const downloadRef = useRef(null);
   const canvasRef = useRef(null);
+  const isLoadingImage = id.includes(".png");
+  const [dataURL, setDataURL] = useState(null);
 
   const fetchRandomImage = () => {
     setLoading(true);
@@ -50,7 +53,7 @@ const ImagePage = (props) => {
 
   const onDownloadClick = useCallback(() => {
     if (isMobile) {
-      router.push("/duck.png");
+      router.push("/" + data.objectID + ".png");
     } else {
       console.log("Downloading", data.title, data.artistDisplayName);
       downloadImage(
@@ -66,8 +69,7 @@ const ImagePage = (props) => {
     if (
       (!props || !props.primaryImage) &&
       id !== null &&
-      typeof id !== "undefined" &&
-      !id.includes(".png")
+      typeof id !== "undefined"
     ) {
       setLoading(true);
       axios.get("/api/getImage?id=" + id).then(({ data }) => {
@@ -78,15 +80,37 @@ const ImagePage = (props) => {
     fetchDepartments();
   }, [id]);
 
-  if (id.includes(".png")) {
-    return <img src="https://i.imgur.com/06rJufm.png" />;
+  useEffect(async () => {
+    if (isLoadingImage && urlDataResult && extractedColors && !dataURL) {
+      let fetchedDataURL = await downloadImage(
+        downloadRef.current,
+        canvasRef.current,
+        data.title,
+        data.artistDisplayName,
+        true
+      );
+      setDataURL(fetchedDataURL);
+    }
+  }, [id, urlDataResult, extractedColors]);
+
+  if (isLoadingImage && urlDataResult && extractedColors && dataURL) {
+    return (
+      <>
+        <style jsx global>{`
+          body {
+            overflow: visible;
+          }
+        `}</style>
+        <img src={dataURL} />
+      </>
+    );
   }
 
   return (
     <div style={{ position: "relative" }}>
       <ImageCardPage
         data={data}
-        loading={loading}
+        loading={loading || isLoadingImage}
         setUrlDataResult={setUrlDataResult}
         canvasRef={canvasRef}
         setExtractedColors={setExtractedColors}
@@ -109,18 +133,18 @@ const ImagePage = (props) => {
           }
         />
         <Button
-          disabled={loading}
+          disabled={loading || isLoadingImage}
           onClick={() => {
-            if (!loading) {
+            if (!loading && !isLoadingImage) {
               fetchRandomImage();
             }
           }}>
           Random
         </Button>
         <Button
-          disabled={loading}
+          disabled={loading || isLoadingImage}
           onClick={() => {
-            if (!loading) {
+            if (!loading && !isLoadingImage) {
               onDownloadClick();
             }
           }}
@@ -146,17 +170,19 @@ const ImagePage = (props) => {
 
 export const getServerSideProps = async ({ params, res }) => {
   const { id } = params;
-  const result = !id.includes(".png")
-    ? await axios.get(
-        `${
-          process.env.VERCEL_URL
-            ? "https://" + process.env.VERCEL_URL
-            : process.env.NEXT_PUBLIC_API_URL
-            ? process.env.NEXT_PUBLIC_API_URL
-            : "http://localhost:3000"
-        }/api/getImage?id=${id}`
-      )
-    : { data: {} };
+  let parsedId = id;
+  if (parsedId.includes(".png")) {
+    parsedId = parsedId.substring(0, parsedId.indexOf(".png"));
+  }
+  const result = await axios.get(
+    `${
+      process.env.VERCEL_URL
+        ? "https://" + process.env.VERCEL_URL
+        : process.env.NEXT_PUBLIC_API_URL
+        ? process.env.NEXT_PUBLIC_API_URL
+        : "http://localhost:3000"
+    }/api/getImage?id=${parsedId}`
+  );
   return {
     props: result.data,
   };

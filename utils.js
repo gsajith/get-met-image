@@ -23,7 +23,13 @@ function arrayCompare(_arr1, _arr2) {
   return true;
 }
 
-function downloadImage(ref, canvasRef, title, artist) {
+async function downloadImage(
+  ref,
+  canvasRef,
+  title,
+  artist,
+  returnDataUrl = false
+) {
   const canvas = canvasRef;
   const node = ref.cloneNode(true);
   canvas.innerHTML = "";
@@ -44,6 +50,12 @@ function downloadImage(ref, canvasRef, title, artist) {
   //   link.href = dataUrl;
   //   link.click();
   // });
+  if (returnDataUrl) {
+    let renderedCanvas = await html2canvas(canvas);
+    let dataURL = renderedCanvas.toDataURL("image/png");
+    console.log("here", dataURL);
+    return dataURL;
+  }
   html2canvas(canvas, {}).then((canvas) => {
     let dataURL = canvas.toDataURL("image/png");
     let link = document.createElement("a");

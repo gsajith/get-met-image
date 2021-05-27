@@ -58,13 +58,17 @@ const HomePage = (props) => {
   }, []);
 
   const onDownloadClick = useCallback(() => {
-    console.log("Downloading", data.title, data.artistDisplayName);
-    downloadImage(
-      downloadRef.current,
-      canvasRef.current,
-      data.title,
-      data.artistDisplayName
-    );
+    if (isMobile) {
+      router.push("/" + data.objectID + ".png");
+    } else {
+      console.log("Downloading", data.title, data.artistDisplayName);
+      downloadImage(
+        downloadRef.current,
+        canvasRef.current,
+        data.title,
+        data.artistDisplayName
+      );
+    }
   }, [data]);
 
   useEffect(() => {
