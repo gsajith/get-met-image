@@ -35,6 +35,7 @@ if (canUseDOM) {
   lazySizes = require("lazysizes");
 }
 
+// TODO: Most of this is unused - just need an Image (or next/image) with onLoad
 class LazyLoad extends React.Component {
   static propTypes = {
     src: PropTypes.string,

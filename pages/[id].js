@@ -20,6 +20,9 @@ const ImagePage = (props) => {
   const [departmentPickerShown, setDepartmentPickerShown] = useState(false);
   const [urlDataResult, setUrlDataResult] = useState(null);
   const downloadRef = useRef(null);
+  if (id.includes(".png")) {
+    return <img src="https://i.imgur.com/06rJufm.png" />;
+  }
 
   const fetchRandomImage = () => {
     setLoading(true);
@@ -118,15 +121,17 @@ const ImagePage = (props) => {
 
 export const getServerSideProps = async ({ params, res }) => {
   const { id } = params;
-  const result = await axios.get(
-    `${
-      process.env.VERCEL_URL
-        ? "https://" + process.env.VERCEL_URL
-        : process.env.NEXT_PUBLIC_API_URL
-        ? process.env.NEXT_PUBLIC_API_URL
-        : "http://localhost:3000"
-    }/api/getImage?id=${id}`
-  );
+  const result = !id.includes(".png")
+    ? await axios.get(
+        `${
+          process.env.VERCEL_URL
+            ? "https://" + process.env.VERCEL_URL
+            : process.env.NEXT_PUBLIC_API_URL
+            ? process.env.NEXT_PUBLIC_API_URL
+            : "http://localhost:3000"
+        }/api/getImage?id=${id}`
+      )
+    : { data: {} };
   return {
     props: result.data,
   };
