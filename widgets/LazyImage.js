@@ -10,7 +10,17 @@ export const Image = styled.img`
   top: 0;
   width: 100%;
   height: 100%;
-  transition: all 300ms ease-in-out;
+`;
+
+export const BackgroundImage = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(${(props) => (props.url ? props.url : "")});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const canUseDOM = !!(
@@ -145,8 +155,10 @@ class LazyLoad extends React.Component {
         data-srcset={dataSrcSet}
         className={className}
         onLoad={async () => {
-          let result = await axios.get("/api/storeDataUrl?url=" + src);
-          setUrlDataResult(result.data);
+          if (setUrlDataResult) {
+            let result = await axios.get("/api/storeDataUrl?url=" + src);
+            setUrlDataResult(result.data);
+          }
         }}
       />
     );

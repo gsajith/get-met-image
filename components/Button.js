@@ -11,9 +11,10 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   border-radius: 8px;
   transition: background 300ms ease-in-out;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "initial" : "pointer")};
+  opacity: ${(props) => (props.disabled ? 0.2 : 1)};
   &:hover {
-    background: rgba(0, 0, 0, 0.4);
+    ${(props) => !props.disabled && "background: rgba(0,0,0,.4);"}
   }
   display: flex;
 `;

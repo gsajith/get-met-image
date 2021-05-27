@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import ControlsContainer from "../components/ControlsContainer";
-import DepartmentsFilter from "../widgets/DepartmentsFilter";
 import FilterDepartmentsButton from "../components/FilterDepartmentsButton";
-import ImageCardPage from "../widgets/ImageCardPage";
 import { downloadImage } from "../utils";
+import DepartmentsFilter from "../widgets/DepartmentsFilter";
+import ImageCardPage from "../widgets/ImageCardPage";
 import ImageCardPageOffscreen from "../widgets/ImageCardPageOffscreen";
 
 const HomePage = (props) => {
@@ -89,8 +89,23 @@ const HomePage = (props) => {
             )
           }
         />
-        <Button onClick={fetchRandomImage}>Random</Button>
-        <Button onClick={onDownloadClick} style={{ marginLeft: "auto" }}>
+        <Button
+          disabled={loading}
+          onClick={() => {
+            if (!loading) {
+              fetchRandomImage();
+            }
+          }}>
+          Random
+        </Button>
+        <Button
+          disabled={loading}
+          onClick={() => {
+            if (!loading) {
+              onDownloadClick();
+            }
+          }}
+          style={{ marginLeft: "auto" }}>
           <img
             src="./Download.svg"
             style={{ width: 16, height: 16, marginRight: 6 }}

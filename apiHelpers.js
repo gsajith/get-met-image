@@ -5,28 +5,25 @@ const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
+const getImageColors = async (url) => {
+  let v = new Vibrant(url);
+  let palette = await v.getPalette();
+  let extractedColors = {};
+  extractedColors.vibrant = palette.Vibrant?.getHex();
+  extractedColors.lightVibrant = palette.LightVibrant?.getHex();
+  extractedColors.darkVibrant = palette.DarkVibrant?.getHex();
+  extractedColors.muted = palette.Muted?.getHex();
+  extractedColors.lightMuted = palette.LightMuted?.getHex();
+  extractedColors.darkMuted = palette.DarkMuted?.getHex();
+  return extractedColors;
+};
+
 const getImage = async (id, departments) => {
   if (id === null || typeof id === "undefined" || id < 0) {
     let result = await getRandomImage(departments);
     return result;
   } else {
     let imageData = await getImageDataForId(id);
-    if (
-      imageData.primaryImage &&
-      typeof imageData.primaryImage !== "undefined" &&
-      imageData.primaryImage.length > 0
-    ) {
-      let v = new Vibrant(imageData.primaryImage, {});
-      let palette = await v.getPalette();
-      let extractedColors = {};
-      extractedColors.vibrant = palette.Vibrant?.getHex();
-      extractedColors.lightVibrant = palette.LightVibrant?.getHex();
-      extractedColors.darkVibrant = palette.DarkVibrant?.getHex();
-      extractedColors.muted = palette.Muted?.getHex();
-      extractedColors.lightMuted = palette.LightMuted?.getHex();
-      extractedColors.darkMuted = palette.DarkMuted?.getHex();
-      imageData.extractedColors = extractedColors;
-    }
     return imageData;
   }
 };
@@ -52,22 +49,6 @@ const getRandomImage = async (departments) => {
     randomId =
       data.objectIDs[Math.floor(Math.random() * data.objectIDs.length)];
     imageData = await getImageDataForId(randomId);
-  }
-  if (
-    imageData.primaryImage &&
-    typeof imageData.primaryImage !== "undefined" &&
-    imageData.primaryImage.length > 0
-  ) {
-    let v = new Vibrant(imageData.primaryImage, {});
-    let palette = await v.getPalette();
-    let extractedColors = {};
-    extractedColors.vibrant = palette.Vibrant?.getHex();
-    extractedColors.lightVibrant = palette.LightVibrant?.getHex();
-    extractedColors.darkVibrant = palette.DarkVibrant?.getHex();
-    extractedColors.muted = palette.Muted?.getHex();
-    extractedColors.lightMuted = palette.LightMuted?.getHex();
-    extractedColors.darkMuted = palette.DarkMuted?.getHex();
-    imageData.extractedColors = extractedColors;
   }
   return imageData;
 };
@@ -95,4 +76,4 @@ const fetchAllDepartments = async () => {
   return allDepartments.data.departments;
 };
 
-export { getImage, getRandomImage, fetchAllDepartments };
+export { getImage, getRandomImage, fetchAllDepartments, getImageColors };

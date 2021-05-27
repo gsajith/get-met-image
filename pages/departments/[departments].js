@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
 import ControlsContainer from "../../components/ControlsContainer";
-import DepartmentsFilter from "../../widgets/DepartmentsFilter";
 import FilterDepartmentsButton from "../../components/FilterDepartmentsButton";
-import ImageCardPage from "../../widgets/ImageCardPage";
 import { arrayCompare, downloadImage } from "../../utils";
+import DepartmentsFilter from "../../widgets/DepartmentsFilter";
+import ImageCardPage from "../../widgets/ImageCardPage";
+import ImageCardPageOffscreen from "../../widgets/ImageCardPageOffscreen";
 
 const DepartmentPage = (props) => {
   const router = useRouter();
@@ -19,6 +20,8 @@ const DepartmentPage = (props) => {
   );
   const [departments, setDepartments] = useState([]);
   const [departmentPickerShown, setDepartmentPickerShown] = useState(false);
+  const [urlDataResult, setUrlDataResult] = useState(null);
+  const downloadRef = useRef(null);
 
   const fetchRandomImage = () => {
     setLoading(true);
@@ -48,6 +51,11 @@ const DepartmentPage = (props) => {
     });
   };
 
+  const onDownloadClick = useCallback(() => {
+    console.log("Downloading", data.title, data.artistDisplayName);
+    downloadImage(downloadRef.current, data.title, data.artistDisplayName);
+  }, [data]);
+
   useEffect(() => {
     if (
       (!props || !props.primaryImage) &&
@@ -74,7 +82,16 @@ const DepartmentPage = (props) => {
 
   return (
     <>
-      <ImageCardPage data={data} loading={loading} />
+      <ImageCardPage
+        data={data}
+        loading={loading}
+        setUrlDataResult={setUrlDataResult}
+      />
+      <ImageCardPageOffscreen
+        data={data}
+        urlDataResult={urlDataResult}
+        downloadRef={downloadRef}
+      />
       <ControlsContainer>
         {departmentPickerShown && (
           <DepartmentsFilter
@@ -91,12 +108,25 @@ const DepartmentPage = (props) => {
             )
           }
         />
-        <Button onClick={fetchRandomImage}>Random</Button>
         <Button
-          onClick={() => downloadImage(data.title, data.artistDisplayName)}
+          disabled={loading}
+          onClick={() => {
+            if (!loading) {
+              fetchRandomImage();
+            }
+          }}>
+          Random
+        </Button>
+        <Button
+          disabled={loading}
+          onClick={() => {
+            if (!loading) {
+              onDownloadClick();
+            }
+          }}
           style={{ marginLeft: "auto" }}>
           <img
-            src="./Download.svg"
+            src="/Download.svg"
             style={{ width: 16, height: 16, marginRight: 6 }}
           />
           Download

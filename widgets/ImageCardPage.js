@@ -13,33 +13,45 @@ import CopyButton from "../components/CopyButton";
 import LazyImage from "./LazyImage";
 import LoadingPage from "./LoadingPage";
 import PageWrapper from "../components/PageWrapper";
+import axios from "axios";
+import LoadingSwatch from "./LoadingSwatch";
 
 const ImageCardPage = ({ data, loading, setUrlDataResult }) => {
-  const [imageUrl, setImageUrl] = useState(data.primaryImage);
   const [smallImageUrl, setSmallImageUrl] = useState(data.primaryImageSmall);
   const [imageTitle, setImageTitle] = useState(data.title);
   const [artist, setArtist] = useState(data.artistDisplayName);
   const [date, setDate] = useState(data.objectDate);
-  const [extractedColor, setExtractedColor] = useState(data.extractedColors);
+  const [extractedColors, setExtractedColors] = useState(data.extractedColors);
   const [objectID, setObjectID] = useState(data.objectID);
   const [hovering, setHovering] = useState(false);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (data && typeof data !== "undefined") {
-      setImageUrl(data.primaryImage);
       setSmallImageUrl(data.primaryImageSmall);
       setImageTitle(data.title);
       setArtist(data.artistDisplayName);
       setDate(data.objectDate);
-      setExtractedColor(data.extractedColors);
+      setExtractedColors(data.extractedColors);
       setObjectID(data.objectID);
+
+      if (
+        data.primaryImage &&
+        typeof data.primaryImage !== "undefined" &&
+        data.primaryImage.length > 0
+      ) {
+        axios
+          .get("/api/getImageColors?url=" + data.primaryImage)
+          .then((result) => {
+            setExtractedColors(result.data);
+          });
+      }
     }
   }, [data]);
 
   return (
     <Page>
-      <PageWrapper color={extractedColor?.lightMuted}>
+      <PageWrapper color={extractedColors?.lightVibrant}>
         <PageContainer>
           <Head>
             <title>
@@ -67,7 +79,7 @@ const ImageCardPage = ({ data, loading, setUrlDataResult }) => {
             onMouseLeave={() => setHovering(false)}>
             <CardContent>
               <LoadingPage
-                color={extractedColor?.lightMuted}
+                color={extractedColors?.lightVibrant}
                 opacity={loading ? 0.7 : 0}
               />
               <CopiedNotification opacity={copied ? 1 : 0}>
@@ -79,31 +91,36 @@ const ImageCardPage = ({ data, loading, setUrlDataResult }) => {
               <ImageContainer>
                 <LazyImage
                   src={smallImageUrl}
-                  dataSrc={imageUrl}
                   setUrlDataResult={setUrlDataResult}
                 />
               </ImageContainer>
-              <ImageName color={extractedColor?.muted}>
+              <ImageName color={extractedColors?.vibrant}>
                 {imageTitle ? imageTitle : "Title unknown"}
                 {date ? <>, {date}</> : ", date unknown"}
               </ImageName>
-              <ArtistName color={extractedColor?.darkMuted}>
+              <ArtistName color={extractedColors?.darkMuted}>
                 {artist ? artist : "Artist unknown"}
               </ArtistName>
-              {extractedColor && (
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 16,
-                    right: 16,
-                    display: "flex",
-                    flexDirection: "row",
-                  }}>
-                  {Object.values(extractedColor).map((color) => (
-                    <ColorSwatch style={{ backgroundColor: color }} />
-                  ))}
-                </div>
-              )}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 16,
+                  right: 16,
+                  display: "flex",
+                  flexDirection: "row",
+                }}>
+                {!extractedColors && <LoadingSwatch />}
+                {extractedColors && (
+                  <>
+                    {Object.values(extractedColors).map((color, index) => (
+                      <ColorSwatch
+                        key={"swatch" + index}
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </>
+                )}
+              </div>
             </CardContent>
           </CardContainer>
         </PageContainer>
