@@ -30,6 +30,12 @@ async function downloadImage(
   artist,
   returnDataUrl = false
 ) {
+  if (returnDataUrl) {
+    let renderedCanvas = await html2canvas(ref);
+    let dataURL = renderedCanvas.toDataURL("image/png");
+    console.log("here", dataURL);
+    return dataURL;
+  }
   const canvas = canvasRef;
   const node = ref.cloneNode(true);
   canvas.innerHTML = "";
@@ -50,12 +56,6 @@ async function downloadImage(
   //   link.href = dataUrl;
   //   link.click();
   // });
-  if (returnDataUrl) {
-    let renderedCanvas = await html2canvas(canvas);
-    let dataURL = renderedCanvas.toDataURL("image/png");
-    console.log("here", dataURL);
-    return dataURL;
-  }
   html2canvas(canvas, {}).then((canvas) => {
     let dataURL = canvas.toDataURL("image/png");
     let link = document.createElement("a");

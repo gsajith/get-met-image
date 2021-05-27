@@ -99,9 +99,32 @@ const ImagePage = (props) => {
         <style jsx global>{`
           body {
             overflow: visible;
+            background: black;
           }
         `}</style>
-        <img src={dataURL} />
+        <img
+          style={{ width: "100vw", height: "100vh", objectFit: "contain" }}
+          src={dataURL}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "80%",
+            width: "100%",
+            padding: "0px 30px",
+            color: "white",
+            pointerEvents: "none",
+          }}>
+          <div
+            style={{
+              padding: 20,
+              textAlign: "center",
+              background: "rgba(0,0,0,.3)",
+            }}>
+            Your image has been generated. <br />
+            Press and hold to save.
+          </div>
+        </div>
       </>
     );
   }
@@ -156,14 +179,12 @@ const ImagePage = (props) => {
           Download
         </Button>
       </NoSSRControlsContainer>
-      {!isMobile && (
-        <ImageCardPageOffscreen
-          data={data}
-          urlDataResult={urlDataResult}
-          downloadRef={downloadRef}
-          extractedColors={extractedColors}
-        />
-      )}
+      <ImageCardPageOffscreen
+        data={data}
+        urlDataResult={urlDataResult}
+        downloadRef={downloadRef}
+        extractedColors={extractedColors}
+      />
     </div>
   );
 };
