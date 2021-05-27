@@ -13,10 +13,13 @@ const StyledButton = styled.button`
   transition: background 300ms ease-in-out;
   cursor: ${(props) => (props.disabled ? "initial" : "pointer")};
   opacity: ${(props) => (props.disabled ? 0.2 : 1)};
+  display: flex;
   &:hover {
     ${(props) => !props.disabled && "background: rgba(0,0,0,.4);"}
   }
-  display: flex;
+  &:focus {
+    box-shadow: 0px 0px 0px 2px rgba(0, 0, 0, 0.5);
+  }
 `;
 
 const Button = (props) => {

@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import styled from "styled-components";
 
-const CopyButtonContainer = styled.div`
+const CopyButtonContainer = styled.button`
   position: absolute;
   top: ${(props) => (props.isMobile ? 0 : 16)}px;
   right: ${(props) => (props.isMobile ? 0 : 16)}px;
@@ -11,11 +11,17 @@ const CopyButtonContainer = styled.div`
   z-index: 2;
   border-radius: 8px;
   transition: all 150ms ease-in-out;
+  outline: none;
+  border: none;
+  background: transparent;
   img {
     pointer-events: none;
   }
   &:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+  }
+  &:focus {
+    box-shadow: 0px 0px 0px 2px rgba(0, 0, 0, 0.5);
   }
 `;
 

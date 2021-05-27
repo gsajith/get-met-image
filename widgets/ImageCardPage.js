@@ -105,6 +105,7 @@ const ImageCardPage = ({
                 </CopiedNotification>
                 {(hovering || isMobile) && (
                   <CopyButton
+                    tabindex="1"
                     isMobile={isMobile}
                     objectID={objectID}
                     setCopied={setCopied}
