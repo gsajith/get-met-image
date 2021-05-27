@@ -17,16 +17,21 @@ import axios from "axios";
 import LoadingSwatch from "./LoadingSwatch";
 import { isMobile } from "react-device-detect";
 import dynamic from "next/dynamic";
-// import Canvas from "./Canvas";
 
 const NoSSRCanvas = dynamic(() => import("./Canvas"), { ssr: false });
 
-const ImageCardPage = ({ data, loading, setUrlDataResult, canvasRef }) => {
+const ImageCardPage = ({
+  data,
+  loading,
+  setUrlDataResult,
+  canvasRef,
+  extractedColors,
+  setExtractedColors,
+}) => {
   const [smallImageUrl, setSmallImageUrl] = useState(data.primaryImageSmall);
   const [imageTitle, setImageTitle] = useState(data.title);
   const [artist, setArtist] = useState(data.artistDisplayName);
   const [date, setDate] = useState(data.objectDate);
-  const [extractedColors, setExtractedColors] = useState(data.extractedColors);
   const [objectID, setObjectID] = useState(data.objectID);
   const [hovering, setHovering] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -37,7 +42,6 @@ const ImageCardPage = ({ data, loading, setUrlDataResult, canvasRef }) => {
       setImageTitle(data.title);
       setArtist(data.artistDisplayName);
       setDate(data.objectDate);
-      setExtractedColors(data.extractedColors);
       setObjectID(data.objectID);
 
       if (
@@ -54,7 +58,13 @@ const ImageCardPage = ({ data, loading, setUrlDataResult, canvasRef }) => {
     }
   }, [data]);
 
-  console.log(canvasRef.current);
+  useEffect(() => {
+    // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+    // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
 
   return (
     <>

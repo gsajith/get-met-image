@@ -3,18 +3,24 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import Button from "../../components/Button";
-import ControlsContainer from "../../components/ControlsContainer";
 import FilterDepartmentsButton from "../../components/FilterDepartmentsButton";
 import { arrayCompare, downloadImage } from "../../utils";
 import DepartmentsFilter from "../../widgets/DepartmentsFilter";
 import ImageCardPage from "../../widgets/ImageCardPage";
 import ImageCardPageOffscreen from "../../widgets/ImageCardPageOffscreen";
+import dynamic from "next/dynamic";
+
+const NoSSRControlsContainer = dynamic(
+  () => import("../../components/ControlsContainer"),
+  { ssr: false }
+);
 
 const DepartmentPage = (props) => {
   const router = useRouter();
   const { departments: queryDepartments } = router.query;
 
   const [data, setData] = useState(props);
+  const [extractedColors, setExtractedColors] = useState(data?.extractedColors);
   const [loading, setLoading] = useState(props.primaryImage ? false : true);
   const [selectedDepartments, setSelectedDepartments] = useState(
     queryDepartments.split(",").map((department) => parseInt(department))
@@ -94,8 +100,10 @@ const DepartmentPage = (props) => {
         loading={loading}
         setUrlDataResult={setUrlDataResult}
         canvasRef={canvasRef}
+        setExtractedColors={setExtractedColors}
+        extractedColors={extractedColors}
       />
-      <ControlsContainer>
+      <NoSSRControlsContainer>
         {departmentPickerShown && (
           <DepartmentsFilter
             departments={departments}
@@ -134,12 +142,13 @@ const DepartmentPage = (props) => {
           />
           Download
         </Button>
-      </ControlsContainer>
+      </NoSSRControlsContainer>
       {!isMobile && (
         <ImageCardPageOffscreen
           data={data}
           urlDataResult={urlDataResult}
           downloadRef={downloadRef}
+          extractedColors={extractedColors}
         />
       )}
     </div>

@@ -10,29 +10,21 @@ import PageContainer from "../components/PageContainer";
 import PageWrapper from "../components/PageWrapper";
 import { BackgroundImage } from "./LazyImage";
 
-const ImageCardPageOffscreen = ({ data, urlDataResult, downloadRef }) => {
+const ImageCardPageOffscreen = ({
+  data,
+  urlDataResult,
+  downloadRef,
+  extractedColors,
+}) => {
   const [imageTitle, setImageTitle] = useState(data.title);
   const [artist, setArtist] = useState(data.artistDisplayName);
   const [date, setDate] = useState(data.objectDate);
-  const [extractedColors, setExtractedColors] = useState(data.extractedColors);
 
   useEffect(() => {
     if (data && typeof data !== "undefined") {
       setImageTitle(data.title);
       setArtist(data.artistDisplayName);
       setDate(data.objectDate);
-      setExtractedColors(data.extractedColors);
-      if (
-        data.primaryImage &&
-        typeof data.primaryImage !== "undefined" &&
-        data.primaryImage.length > 0
-      ) {
-        axios
-          .get("/api/getImageColors?url=" + data.primaryImage)
-          .then((result) => {
-            setExtractedColors(result.data);
-          });
-      }
     }
   }, [data]);
 

@@ -2,19 +2,25 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
-import ControlsContainer from "../components/ControlsContainer";
 import FilterDepartmentsButton from "../components/FilterDepartmentsButton";
 import { downloadImage } from "../utils";
 import DepartmentsFilter from "../widgets/DepartmentsFilter";
 import ImageCardPage from "../widgets/ImageCardPage";
 import ImageCardPageOffscreen from "../widgets/ImageCardPageOffscreen";
 import { isMobile } from "react-device-detect";
+import dynamic from "next/dynamic";
+
+const NoSSRControlsContainer = dynamic(
+  () => import("../components/ControlsContainer"),
+  { ssr: false }
+);
 
 const ImagePage = (props) => {
   const router = useRouter();
   const { id } = router.query;
 
   const [data, setData] = useState(props);
+  const [extractedColors, setExtractedColors] = useState(data?.extractedColors);
   const [loading, setLoading] = useState(props.primaryImage ? false : true);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -83,8 +89,10 @@ const ImagePage = (props) => {
         loading={loading}
         setUrlDataResult={setUrlDataResult}
         canvasRef={canvasRef}
+        setExtractedColors={setExtractedColors}
+        extractedColors={extractedColors}
       />
-      <ControlsContainer>
+      <NoSSRControlsContainer>
         {departmentPickerShown && (
           <DepartmentsFilter
             departments={departments}
@@ -123,12 +131,13 @@ const ImagePage = (props) => {
           />
           Download
         </Button>
-      </ControlsContainer>
+      </NoSSRControlsContainer>
       {!isMobile && (
         <ImageCardPageOffscreen
           data={data}
           urlDataResult={urlDataResult}
           downloadRef={downloadRef}
+          extractedColors={extractedColors}
         />
       )}
     </div>
