@@ -34,6 +34,7 @@ const ImagePage = (props) => {
 
   const fetchRandomImage = () => {
     setLoading(true);
+    setExtractedColors(null);
     if (
       selectedDepartments.length === departments.length ||
       selectedDepartments.length === 0

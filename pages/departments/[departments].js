@@ -33,6 +33,7 @@ const DepartmentPage = (props) => {
 
   const fetchRandomImage = () => {
     setLoading(true);
+    setExtractedColors(null);
     if (
       arrayCompare(
         selectedDepartments,

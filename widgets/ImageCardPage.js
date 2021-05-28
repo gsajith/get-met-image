@@ -1,22 +1,22 @@
+import axios from "axios";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import ArtistName from "../components/ArtistName";
 import CardContainer from "../components/CardContainer";
 import CardContent from "../components/CardContent";
 import ColorSwatch from "../components/ColorSwatch";
+import CopiedNotification from "../components/CopiedNotification";
+import CopyButton from "../components/CopyButton";
 import ImageContainer from "../components/ImageContainer";
 import ImageName from "../components/ImageName";
 import Page from "../components/Page";
 import PageContainer from "../components/PageContainer";
-import CopiedNotification from "../components/CopiedNotification";
-import CopyButton from "../components/CopyButton";
+import PageWrapper from "../components/PageWrapper";
 import LazyImage from "./LazyImage";
 import LoadingPage from "./LoadingPage";
-import PageWrapper from "../components/PageWrapper";
-import axios from "axios";
 import LoadingSwatch from "./LoadingSwatch";
-import { isMobile } from "react-device-detect";
-import dynamic from "next/dynamic";
 
 const NoSSRCanvas = dynamic(() => import("./Canvas"), { ssr: false });
 

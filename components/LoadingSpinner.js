@@ -14,10 +14,10 @@ const Spinner = styled.div`
     width: 0.8em;
     height: 0.8em;
     margin: 0.1em;
-    border: 0.1em solid #fff;
+    border: 0.1em solid #ccc;
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #fff transparent transparent transparent;
+    border-color: #ccc transparent transparent transparent;
   }
   div:nth-child(1) {
     animation-delay: -0.45s;
